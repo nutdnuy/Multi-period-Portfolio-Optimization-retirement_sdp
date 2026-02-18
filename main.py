@@ -203,17 +203,17 @@ def run(config_path: str, skip_fetch: bool = False, fast: bool = False) -> None:
         raw_prices={}, tickers=tickers, cache=cache,
         av_cfg=av_cfg, skip_fetch=skip_fetch,
     )
-    cpi_raw = fetch_or_load_cpi(cfg, cache, skip_fetch)
-
     # 3. Preprocessing ──────────────────────────────────────────────────────────
     mu, Sigma, tickers, returns_df = preprocess(raw_prices, tickers)
     return_model = LogNormalReturnModel(mu, Sigma, tickers)
     logger.info("%s", return_model)
 
     # 4. Inflation & cash flows ─────────────────────────────────────────────────
+    fixed_rate = cf_cfg.get("inflation_rate", 0.03)
+    logger.info("Using fixed inflation rate from config: %.2f%%", fixed_rate * 100)
     inflation = InflationModel(
-        cpi_data=cpi_raw,
-        fallback_rate=cf_cfg.get("inflation_rate", 0.03),
+        cpi_data={},
+        fallback_rate=fixed_rate,
     )
     schedule = build_schedule(
         phases=phases,

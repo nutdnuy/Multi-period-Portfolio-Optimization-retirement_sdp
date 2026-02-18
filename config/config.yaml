@@ -5,7 +5,7 @@
 
 # ── Alpha Vantage ─────────────────────────────────────────────────────────────
 alpha_vantage:
-  api_key: "YOUR_API_KEY_HERE"   # Free tier: 25 requests/day
+  api_key: "97ENMFDNTX5BV5JI"  # Free tier: 25 requests/day
   base_url: "https://www.alphavantage.co/query"
 
 # ── Assets ────────────────────────────────────────────────────────────────────
