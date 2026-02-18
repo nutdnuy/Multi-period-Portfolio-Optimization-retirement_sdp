@@ -1,0 +1,62 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Retirement SDP – Example Configuration
+# Copy this file to config/config.yaml and fill in your API key.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Alpha Vantage ─────────────────────────────────────────────────────────────
+alpha_vantage:
+  api_key: "YOUR_API_KEY_HERE"   # Free tier: 25 requests/day
+  base_url: "https://www.alphavantage.co/query"
+
+# ── Assets ────────────────────────────────────────────────────────────────────
+assets:
+  tickers: ["SPY", "AGG", "GLD"]   # equity, bond, gold ETFs
+  cpi_series: "CPIAUCSL"            # BLS CPI via Alpha Vantage ECONOMIC_INDICATOR
+
+# ── Life-phase schedule ───────────────────────────────────────────────────────
+# Each phase: name, duration (years), type (accumulation | drawdown)
+phases:
+  - name: "Early Career"
+    years: 15
+    type: accumulation
+  - name: "Peak Earning"
+    years: 10
+    type: accumulation
+  - name: "Pre-Retirement"
+    years: 5
+    type: accumulation
+  - name: "Early Retirement"
+    years: 10
+    type: drawdown
+  - name: "Late Retirement"
+    years: 15
+    type: drawdown
+
+# ── Cash flows ────────────────────────────────────────────────────────────────
+cashflow:
+  initial_wealth: 100_000          # Starting portfolio value ($)
+  annual_contribution: 20_000      # Annual contribution during accumulation
+  annual_withdrawal: 50_000        # Annual withdrawal during drawdown (real $)
+  inflation_rate: 0.03             # Fallback if CPI fetch fails
+
+# ── SDP parameters ───────────────────────────────────────────────────────────
+sdp:
+  wealth_grid_points: 500          # Nodes on log-spaced wealth grid
+  wealth_min: 1_000                # Minimum wealth node ($)
+  wealth_max: 10_000_000           # Maximum wealth node ($)
+  num_portfolios: 100              # Efficient-frontier discretisation
+  gamma: 3.0                       # CRRA risk-aversion coefficient
+  beta: 0.97                       # Annual discount factor
+  mc_samples: 2_000                # Monte Carlo samples per Bellman step
+
+# ── Analysis ─────────────────────────────────────────────────────────────────
+analysis:
+  num_paths: 20_000                # Forward-simulation paths
+  swr_tolerance: 0.05              # Max acceptable ruin probability for SWR
+  swr_bracket: [0.01, 0.15]        # Search bracket for Brent's method
+
+# ── Output ────────────────────────────────────────────────────────────────────
+output:
+  cache_dir: "outputs/cache"
+  figures_dir: "outputs/figures"
+  figure_dpi: 150
